@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time News</title>
+
+    {% load static %}
+    <link rel="stylesheet"
+          href="{% static 'plugins/bootstrap-3.4.1-dist/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+<h1>Real-time News</h1>
+<ul id="news"></ul>
+<script src="{% static 'js/jquery-3.7.0.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/news/list',
+            headers: {'X-Requested-With': 'XMLHttpRequest'}, // 添加 X-Requested-With 头部
+            success: function (response) {
+                // Handle the response data
+                if (response.headlines) {
+                    response.headlines.forEach(function (headline) {
+                        $('#news').append('<li>' + headline + '</li>');
+                    });
+                } else {
+                    $('#news').append('<li>Error fetching news data</li>');
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#news').append('<li>Error: ' + error + '</li>');
+            }
+        });
+    });
+</script>
+</body>
+</html>
